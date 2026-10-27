@@ -1,0 +1,16 @@
+@using EZ_Rent.Areas.Tenant.Services
+@model RepairRequest
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Hủy yêu cầu sửa chữa";
+    ViewData["Description"] = Model.RentalPost.Title;
+}
+<section class="rental-panel rental-confirmation">
+    <h2>Bạn muốn hủy yêu cầu này?</h2>
+    <p><strong>@Model.ProblemType</strong></p><p class="rental-prose">@Model.Description</p>
+    <p>Yêu cầu sẽ chuyển sang Đã hủy. Nội dung và lịch sử được giữ lại để bạn tra cứu.</p>
+    <form asp-action="Delete" asp-route-id="@Model.RepairRequestId" method="post" class="rental-actions">
+        <button type="submit" class="rental-button danger">Xác nhận hủy yêu cầu</button>
+        <a asp-action="Details" asp-route-id="@Model.RepairRequestId" class="rental-button secondary">Giữ yêu cầu</a>
+    </form>
+</section>

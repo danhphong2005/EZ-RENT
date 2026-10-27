@@ -1,0 +1,38 @@
+@using EZ_Rent.Areas.Tenant.Services
+@model EZ_Rent.Areas.Tenant.ViewModels.ContractDetailsModel
+@{
+    var contract = Model.Contract;
+    Layout = "_Layout";
+    ViewData["Title"] = $"Hợp đồng #{contract.RentalContractId}";
+    ViewData["Description"] = contract.RentalPost.Title;
+}
+<a asp-action="Index" class="rental-back">Quay lại danh sách hợp đồng</a>
+<div class="rental-detail-grid">
+    <section class="rental-panel">
+        <div class="rental-section-heading"><h2>Thông tin hợp đồng</h2><span class="rental-status @TenantRentalPresentation.Tone(contract.Status)">@TenantRentalPresentation.ContractLabel(contract.Status)</span></div>
+        <dl class="rental-detail-facts">
+            <div><dt>Phòng thuê</dt><dd>@contract.RentalPost.Title</dd></div>
+            <div><dt>Địa chỉ</dt><dd>@contract.RentalPost.Address, @contract.RentalPost.District, @contract.RentalPost.City</dd></div>
+            <div><dt>Người thuê</dt><dd>@contract.Tenant.FullName</dd></div>
+            <div><dt>Chủ nhà</dt><dd>@contract.Landlord.FullName</dd></div>
+            <div><dt>Ngày bắt đầu</dt><dd>@TenantRentalPresentation.Date(contract.StartDate)</dd></div>
+            <div><dt>Ngày kết thúc</dt><dd>@TenantRentalPresentation.Date(contract.EndDate)</dd></div>
+            <div><dt>Tiền thuê / tháng</dt><dd>@TenantRentalPresentation.Money(contract.MonthlyRent)</dd></div>
+            <div><dt>Tiền đặt cọc</dt><dd>@TenantRentalPresentation.Money(contract.DepositAmount)</dd></div>
+            <div><dt>Giá điện thỏa thuận</dt><dd>@TenantRentalPresentation.Money(contract.AgreedElectricityPrice) / kWh</dd></div>
+            <div><dt>Giá nước thỏa thuận</dt><dd>@TenantRentalPresentation.Money(contract.AgreedWaterPrice) / m³</dd></div>
+        </dl>
+        <h2 class="rental-subheading">Điều khoản</h2>
+        <p class="rental-prose">@(string.IsNullOrWhiteSpace(contract.Terms) ? "Chưa có nội dung điều khoản được lưu." : contract.Terms)</p>
+    </section>
+    <aside class="rental-panel">
+        <h2>Tra cứu liên quan</h2>
+        <p>Các khoản thu được lưu riêng theo hợp đồng này.</p>
+        <a asp-controller="Invoice" asp-action="Index" asp-route-ContractId="@contract.RentalContractId" class="rental-button primary">Xem hóa đơn</a>
+        @if (contract.Status == ContractStatus.Active)
+        { <a asp-controller="MyRoom" asp-action="Index" asp-route-contractId="@contract.RentalContractId" class="rental-button secondary">Về phòng đang ở</a> }
+        <p class="rental-note">Nếu thông tin chưa đúng, hãy trao đổi với chủ nhà để đối chiếu.</p>
+    </aside>
+</div>
+
+@await Html.PartialAsync("_ContractDocuments", Model)

@@ -1,0 +1,25 @@
+@using EZ_Rent.Areas.Tenant.Services
+@using EZ_Rent.Areas.Tenant.ViewModels
+@model InvoiceListModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Hóa đơn của tôi";
+    ViewData["Description"] = "Theo dõi các khoản thu, hạn thanh toán và trạng thái được ghi nhận.";
+}
+<div asp-validation-summary="All" class="rental-validation" role="alert"></div>
+@if (Model.Input.ContractId.HasValue)
+{ <p class="rental-filter-context">Đang xem hợp đồng #@Model.Input.ContractId. <a asp-action="Index">Xem mọi hợp đồng</a></p> }
+<form asp-action="Index" method="get" class="rental-filter">
+    @if (Model.Input.ContractId.HasValue) { <input type="hidden" name="ContractId" value="@Model.Input.ContractId" /> }
+    <div><label for="Status">Trạng thái thanh toán</label><select id="Status" name="Status">
+        <option value="">Tất cả trạng thái</option>
+        @foreach (var status in Enum.GetValues<PaymentStatus>())
+        { <option value="@((int)status)" selected="@(Model.Input.Status == status)">@TenantRentalPresentation.PaymentLabel(status)</option> }
+    </select></div>
+    <button class="rental-button secondary" type="submit">Áp dụng</button>
+    <span>@Model.Total hóa đơn</span>
+</form>
+@if (Model.Items.Count == 0)
+{ <section class="rental-empty"><h2>Chưa có hóa đơn phù hợp</h2><p>Thử đổi bộ lọc. Hóa đơn mới sẽ xuất hiện khi chủ nhà lập khoản thu cho bạn.</p></section> }
+@foreach (var invoice in Model.Items) { @await Html.PartialAsync("_RentalInvoiceRow", invoice) }
+@await Html.PartialAsync("_TenantPagination", new TenantPaginationModel(Model.Input.Page, Model.TotalPages, page => Url.Action("Index", new { Page = page, Status = (int?)Model.Input.Status, Model.Input.ContractId }), "Phân trang hóa đơn"))

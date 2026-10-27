@@ -1,0 +1,39 @@
+@using EZ_Rent.Areas.Tenant.Services
+@using EZ_Rent.Areas.Tenant.ViewModels
+@model ContractListModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Hợp đồng của tôi";
+    ViewData["Description"] = "Tra cứu điều khoản, thời hạn và các khoản tiền đã thỏa thuận.";
+}
+<div asp-validation-summary="All" class="rental-validation" role="alert"></div>
+<form asp-action="Index" method="get" class="rental-filter">
+    <div><label for="Status">Trạng thái hợp đồng</label><select id="Status" name="Status">
+        <option value="">Tất cả trạng thái</option>
+        @foreach (var status in Enum.GetValues<ContractStatus>())
+        { <option value="@((int)status)" selected="@(Model.Input.Status == status)">@TenantRentalPresentation.ContractLabel(status)</option> }
+    </select></div>
+    <button class="rental-button secondary" type="submit">Áp dụng</button>
+    <span>@Model.Total hợp đồng</span>
+</form>
+@if (Model.Items.Count == 0)
+{
+    <section class="rental-empty"><h2>Chưa có hợp đồng phù hợp</h2><p>Hợp đồng của bạn sẽ xuất hiện tại đây khi được tạo. Bạn có thể đổi bộ lọc để xem các trạng thái khác.</p><a asp-action="Index">Xem tất cả hợp đồng</a></section>
+}
+@foreach (var contract in Model.Items)
+{
+    <article class="rental-row" data-contract-id="@contract.RentalContractId">
+        <div class="rental-row-main">
+            <a asp-action="Details" asp-route-id="@contract.RentalContractId" class="rental-row-title">@contract.RentalPost.Title</a>
+            <p>@contract.RentalPost.Address</p>
+            <small>Hợp đồng #@contract.RentalContractId · @TenantRentalPresentation.Date(contract.StartDate) – @TenantRentalPresentation.Date(contract.EndDate)</small>
+            <small>Chủ nhà: @contract.Landlord.FullName</small>
+        </div>
+        <div class="rental-row-end">
+            <span class="rental-status @TenantRentalPresentation.Tone(contract.Status)">@TenantRentalPresentation.ContractLabel(contract.Status)</span>
+            <strong class="rental-amount">@TenantRentalPresentation.Money(contract.MonthlyRent)<small> / tháng</small></strong>
+            <a asp-action="Details" asp-route-id="@contract.RentalContractId">Xem hợp đồng</a>
+        </div>
+    </article>
+}
+@await Html.PartialAsync("_TenantPagination", new TenantPaginationModel(Model.Input.Page, Model.TotalPages, page => Url.Action("Index", new { Page = page, Status = (int?)Model.Input.Status }), "Phân trang hợp đồng"))

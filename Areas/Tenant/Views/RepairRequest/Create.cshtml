@@ -1,0 +1,7 @@
+@model EZ_Rent.Areas.Tenant.ViewModels.RepairRequestInputModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Gửi yêu cầu sửa chữa";
+    ViewData["Description"] = "Báo sự cố tại phòng đang thuê để chủ nhà tiếp nhận.";
+}
+@await Html.PartialAsync("_RepairForm", Model)

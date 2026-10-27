@@ -1,0 +1,48 @@
+@using System.Globalization
+@model EZ_Rent.Areas.Tenant.ViewModels.TenantHomeModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Trang chủ";
+    ViewData["HomePage"] = true;
+    var culture = CultureInfo.GetCultureInfo("vi-VN");
+    var next = Model.NextAppointment;
+}
+<div class="home-heading"><div><h1>Chào @Model.DisplayName!</h1><p>Thông tin mới cho hành trình tìm nhà của bạn.</p></div><div class="home-heading-actions"><time datetime="@Model.Today.ToString("yyyy-MM-dd")">@Model.Today.ToString("dddd, dd 'tháng' MM", culture)</time><a asp-controller="RentalPost" asp-action="Index" class="button primary">@await Html.PartialAsync("_HomeIcon", "search") Tìm phòng</a></div></div>
+<div class="home-layout" data-home-layout>
+    <div class="home-content">
+        <section class="home-upcoming" aria-labelledby="home-next-title"><div class="home-section-title"><h2 id="home-next-title">Lịch hẹn tiếp theo</h2>@if (next != null) { <span class="home-confirmed">@await Html.PartialAsync("_HomeIcon", "check") Đã xác nhận</span> }</div>
+            @if (next != null)
+            {
+                <div class="upcoming-detail"><div class="home-date-box"><span>Tháng @next.ViewingDate.ToString("MM")</span><strong>@next.ViewingDate.ToString("dd")</strong><span>@next.ViewingDate.ToString("dddd", culture)</span></div><div class="upcoming-info"><p class="home-upcoming-time">@next.TimeLabel<span> · Giờ đến xem</span></p><h3>@next.Title</h3><p class="upcoming-address">@await Html.PartialAsync("_HomeIcon", "pin") @next.Address</p><p class="upcoming-calendar-date">@next.DateLabel</p></div><a asp-controller="ViewingAppointment" asp-action="Details" asp-route-id="@next.Id" class="button">Xem lịch hẹn @await Html.PartialAsync("_HomeIcon", "arrow")</a></div>
+            }
+            else
+            {
+                <div class="home-empty"><p>Bạn chưa có lịch sắp tới được chủ nhà xác nhận.</p><a asp-controller="ViewingAppointment" asp-action="Index" class="text-button">Theo dõi yêu cầu của bạn @await Html.PartialAsync("_HomeIcon", "arrow")</a></div>
+            }
+        </section>
+        <section class="home-notification-section" aria-labelledby="home-notifications-title"><div class="home-section-title"><h2 id="home-notifications-title">Thông báo gần đây @if (Model.UnreadCount > 0) { <span class="home-section-count" aria-label="@Model.UnreadCount thông báo chưa đọc">@Model.UnreadCount</span> }</h2><a asp-controller="Notification" asp-action="Index" class="text-button">Xem tất cả @await Html.PartialAsync("_HomeIcon", "arrow")</a></div>
+            @if (Model.Notices.Count > 0) { @await Html.PartialAsync("_HomeNotices", Model.Notices) }
+            else { <p class="home-empty home-notices-empty">Bạn chưa có thông báo. Tin mới từ hệ thống sẽ hiển thị tại đây.</p> }
+        </section>
+        @await Html.PartialAsync("_TenantGuides")
+    </div>
+    <aside class="home-aside" aria-label="Tiện ích cho người thuê">
+        <nav class="home-shortcuts" aria-label="Lối tắt Trang chủ"><h2>Của bạn</h2>
+            <a asp-controller="ViewingAppointment" asp-action="Index" class="home-shortcut">@await Html.PartialAsync("_HomeIcon", "calendar")<span><strong>Lịch hẹn</strong><small>@(Model.PendingAppointments > 0 ? $"{Model.PendingAppointments} yêu cầu đang chờ" : "Theo dõi lịch của bạn")</small></span>@await Html.PartialAsync("_HomeIcon", "arrow")</a>
+            <a asp-controller="Favorite" asp-action="Index" class="home-shortcut">@await Html.PartialAsync("_HomeIcon", "heart")<span><strong>Phòng đã lưu</strong><small>@Model.SavedCount phòng quan tâm</small></span>@await Html.PartialAsync("_HomeIcon", "arrow")</a>
+            <a asp-area="" asp-controller="Chat" asp-action="Index" class="home-shortcut">@await Html.PartialAsync("_HomeIcon", "chat")<span><strong>Tin nhắn</strong><small>Trao đổi với chủ nhà</small></span>@await Html.PartialAsync("_HomeIcon", "arrow")</a>
+            <a asp-action="Help" class="home-shortcut">@await Html.PartialAsync("_HomeIcon", "help")<span><strong>Hỗ trợ</strong><small>Hỏi đáp và hướng dẫn</small></span>@await Html.PartialAsync("_HomeIcon", "arrow")</a>
+        </nav>
+        <section class="home-saved" aria-labelledby="home-saved-title"><div class="home-section-title"><h2 id="home-saved-title">Đã lưu để xem lại</h2></div><div class="home-saved-list">
+            @foreach (var room in Model.SavedRooms)
+            {
+                <a asp-controller="@(room.IsAvailable ? "RentalPost" : "Favorite")" asp-action="@(room.IsAvailable ? "Details" : "Index")" asp-route-id="@(room.IsAvailable ? room.RentalPostId : (int?)null)" asp-route-returnUrl="@(room.IsAvailable ? Url.Action("Index", "Dashboard") : null)" class="home-saved-room" data-saved-room="@room.RentalPostId"><span class="saved-room-symbol">@await Html.PartialAsync("_HomeIcon", "room")</span><span class="home-saved-copy"><strong>@room.Title</strong>
+                @if (room.IsAvailable) { <span>@room.Area.ToString("0.##", culture) m² · @room.Address</span><span class="saved-price">@room.Price.ToString("N0", culture) đ <small>/ tháng</small></span> }
+                else { <span>Bạn có thể mở danh sách đã lưu để bỏ lưu tin này.</span> }</span>@await Html.PartialAsync("_HomeIcon", "arrow")</a>
+            }
+            @if (Model.SavedRooms.Count == 0) { <p class="home-empty">Bạn chưa lưu phòng nào. Khi tìm thấy lựa chọn phù hợp, bấm trái tim để xem lại tại đây.</p> }
+        </div>@if (Model.SavedRooms.Count > 0) { <a asp-controller="Favorite" asp-action="Index" class="text-button">Xem danh sách đã lưu @await Html.PartialAsync("_HomeIcon", "arrow")</a> }</section>
+        <section class="home-help"><h2>Cần trao đổi thêm?</h2><p>Xem hướng dẫn tìm phòng, theo dõi lịch hẹn và cách sử dụng EZ Rent.</p><a asp-action="Help" class="text-button">Mở phần hỗ trợ @await Html.PartialAsync("_HomeIcon", "arrow")</a></section>
+    </aside>
+</div>
+<footer class="home-footnote"><span>EZ Rent · Không gian của bạn</span><span>Hướng dẫn và thông tin dành cho người thuê</span></footer>

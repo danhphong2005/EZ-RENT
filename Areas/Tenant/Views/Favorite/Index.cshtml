@@ -1,0 +1,5 @@
+@model EZ_Rent.Areas.Tenant.ViewModels.RentalSearchPageModel
+@{ Layout = "_Layout"; ViewData["Title"] = "Phòng yêu thích"; ViewData["FavoritesPage"] = true; }
+<section class="discovery-intro"><p class="eyebrow">LỰA CHỌN CỦA BẠN</p><h1>Những nơi bạn muốn gọi là nhà.</h1><p>Lưu lại, so sánh và tìm không gian phù hợp với mình.</p></section>
+<p class="notice error" id="search-error" role="alert" hidden></p>
+<section id="rental-results" data-favorites-list aria-label="Phòng đã lưu" aria-live="polite"><partial name="~/Areas/Tenant/Views/RentalPost/_Results.cshtml" model="Model" /></section>

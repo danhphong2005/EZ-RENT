@@ -1,0 +1,35 @@
+@model EZ_Rent.Areas.Tenant.ViewModels.ViewingAppointmentInputModel
+
+@{
+    ViewData["Title"] = "Đặt lịch xem phòng";
+}
+
+<h1>Đặt lịch xem phòng</h1>
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="mb-3">
+                <label asp-for="RentalPostId" class="form-label"></label>
+                <select asp-for="RentalPostId" class="form-select" asp-items="ViewBag.RentalPostId"><option value="">Chọn phòng</option></select>
+                <span asp-validation-for="RentalPostId" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ViewingDate" class="form-label"></label>
+                <input asp-for="ViewingDate" type="datetime-local" class="form-control" />
+                <span asp-validation-for="ViewingDate" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Note" class="form-label"></label>
+                <textarea asp-for="Note" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Note" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Gửi</button>
+            <a asp-action="Index" class="btn btn-link">Quay lại danh sách</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
