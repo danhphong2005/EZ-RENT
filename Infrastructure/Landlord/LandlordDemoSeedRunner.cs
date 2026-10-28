@@ -19,6 +19,8 @@ public sealed class LandlordDemoSeedRunner(IServiceProvider services, IHostEnvir
         try
         {
             using var scope = services.CreateScope();
+            var replaced = await DemoRoomImages.ReplaceRemoteAsync(scope.ServiceProvider.GetRequiredService<EZ_Rent.Data.AppDbContext>(), cancellationToken);
+            if (replaced > 0) logger.LogInformation("Đã đổi {Count} ảnh picsum.photos sang ảnh minh họa trong dự án.", replaced);
             await LandlordDemoSeed.SeedAsync(scope.ServiceProvider, logger, cancellationToken);
             await MarketplaceDemoSeed.SeedAsync(scope.ServiceProvider, logger, cancellationToken);
         }

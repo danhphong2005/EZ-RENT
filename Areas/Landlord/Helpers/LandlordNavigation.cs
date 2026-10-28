@@ -8,7 +8,7 @@ public enum LandlordBadge { None, PendingViewings, OpenRepairs, SupportReplies }
 /// (ví dụ trang ảnh/video phòng vẫn sáng "Danh sách phòng"). Area rỗng = trang chung (Chat).
 /// </summary>
 public sealed record LandlordNavItem(string Label, string Controller, string Action, string[] Matches,
-    LandlordBadge Badge = LandlordBadge.None, string Area = "Landlord");
+    LandlordBadge Badge = LandlordBadge.None, string Area = "Landlord", string Icon = "");
 
 public sealed record LandlordNavGroup(string Key, string Icon, string Label, IReadOnlyList<LandlordNavItem> Items)
 {
@@ -35,30 +35,30 @@ public static class LandlordNavigation
 {
     public static readonly IReadOnlyList<LandlordNavGroup> Groups =
     [
-        new("overview", "📊", "Tổng quan",
+        new("overview", "dashboard", "Tổng quan",
         [
-            new("Bảng tổng quan", "Overview", "Index", ["Overview"]),
-            new("Tin nhắn với người thuê", "Chat", "Index", ["Chat", "Messages"], Area: ""),
-            new("Yêu cầu sửa chữa", "Repairs", "Index", ["Repairs"], LandlordBadge.OpenRepairs),
-            new("Hỗ trợ từ quản trị viên", "Support", "Index", ["Support"], LandlordBadge.SupportReplies)
+            new("Bảng tổng quan", "Overview", "Index", ["Overview"], Icon: "chart"),
+            new("Tin nhắn với người thuê", "Chat", "Index", ["Chat", "Messages"], Area: "", Icon: "chat"),
+            new("Yêu cầu sửa chữa", "Repairs", "Index", ["Repairs"], LandlordBadge.OpenRepairs, Icon: "wrench"),
+            new("Hỗ trợ từ quản trị viên", "Support", "Index", ["Support"], LandlordBadge.SupportReplies, Icon: "support")
         ]),
-        new("rooms", "🏘️", "Phòng trọ",
+        new("rooms", "building", "Phòng trọ",
         [
-            new("Danh sách phòng", "Rooms", "Index", ["Rooms", "RoomMedia"]),
-            new("Đăng tin mới", "Rooms", "Create", []),
-            new("Lịch xem phòng", "Viewings", "Index", ["Viewings"], LandlordBadge.PendingViewings),
-            new("Khung giờ nhận khách", "ViewingHours", "Index", ["ViewingHours"])
+            new("Danh sách phòng", "Rooms", "Index", ["Rooms", "RoomMedia"], Icon: "building"),
+            new("Đăng tin mới", "Rooms", "Create", [], Icon: "plus"),
+            new("Lịch xem phòng", "Viewings", "Index", ["Viewings"], LandlordBadge.PendingViewings, Icon: "calendar"),
+            new("Khung giờ nhận khách", "ViewingHours", "Index", ["ViewingHours"], Icon: "clock")
         ]),
-        new("rental", "📄", "Hợp đồng",
+        new("rental", "contract", "Hợp đồng",
         [
-            new("Hợp đồng", "Contracts", "Index", ["Contracts", "ContractDocuments"]),
-            new("Điện, nước", "MeterReadings", "Index", ["MeterReadings", "MeterPhotos"]),
-            new("Hóa đơn", "Invoices", "Index", ["Invoices", "InvoicePayments"]),
-            new("Tài khoản nhận tiền", "PaymentSettings", "Index", ["PaymentSettings"])
+            new("Hợp đồng", "Contracts", "Index", ["Contracts", "ContractDocuments"], Icon: "contract"),
+            new("Điện, nước", "MeterReadings", "Index", ["MeterReadings", "MeterPhotos"], Icon: "bolt"),
+            new("Hóa đơn", "Invoices", "Index", ["Invoices", "InvoicePayments"], Icon: "receipt"),
+            new("Tài khoản nhận tiền", "PaymentSettings", "Index", ["PaymentSettings"], Icon: "bank")
         ]),
-        new("account", "👤", "Tài khoản",
+        new("account", "user", "Tài khoản",
         [
-            new("Tài khoản chủ trọ", "Account", "Index", ["Account"])
+            new("Tài khoản chủ trọ", "Account", "Index", ["Account"], Icon: "user")
         ])
     ];
 

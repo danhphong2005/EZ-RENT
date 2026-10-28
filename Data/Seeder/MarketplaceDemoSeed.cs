@@ -86,7 +86,7 @@ public static class MarketplaceDemoSeed
             };
             if (approval == ApprovalStatus.Approved) { post.ApprovedById = admin.Id; post.ApprovedAt = createdUtc.AddHours(20); post.PostedAt = post.ApprovedAt; }
             for (var i = 0; i < 4; i++)
-                post.RoomImages.Add(new RoomImage { MediaUrl = $"https://picsum.photos/seed/ezrent-{seed}-{i + 1}/800/600", IsPrimary = i == 0, DisplayOrder = i, CreatedAt = createdUtc });
+                post.RoomImages.Add(new RoomImage { MediaUrl = DemoRoomImages.For(type, seed.Sum(ch => ch), i, title.Contains("gác")), IsPrimary = i == 0, DisplayOrder = i, CreatedAt = createdUtc });
             post.Services.Add(new Service { Name = "Internet", UnitPrice = 120000, Unit = "tháng" });
             post.Services.Add(new Service { Name = "Gửi xe máy", UnitPrice = 120000, Unit = "xe" });
             db.RentalPosts.Add(post);

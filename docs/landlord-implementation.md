@@ -96,6 +96,15 @@ Các file chủ trọ đã có sẵn trên integration (`LandlordControllerBase`
   - chủ trọ `chutro2.demo@ezrent.vn` / `Landlord@123`, có căn hộ, nhà nguyên căn, ký túc xá ở nhiều quận, hợp đồng, hóa đơn kèm bộ đối chiếu;
   - phía người thuê: yêu thích, lịch sử tìm kiếm, thông báo, yêu cầu hỗ trợ có Admin trả lời, bản nháp BM03.
 
+### Ảnh phòng và icon menu
+
+- **Ảnh phòng nằm trong dự án**, ở `wwwroot/images/rooms/`: 27 ảnh minh họa đúng chủ đề (phòng ngủ, studio có gác, phòng khách, bếp, nhà vệ sinh, ký túc xá, ban công, nhà nguyên căn, chỗ để xe) và ảnh sự cố điều hòa.
+  - Ảnh được vẽ bằng `scripts/tao-anh-phong-minh-hoa.py` (Python + Pillow), không có bản quyền bên thứ ba, không cần mạng.
+  - `Data/Seeder/DemoRoomImages.cs` chọn ảnh theo loại phòng: ảnh đại diện là không gian chính, các ảnh sau là phòng phụ.
+  - Ảnh `picsum.photos` cũ trong database được tự đổi sang ảnh này khi chạy ở Development/Demo.
+  - Muốn dùng ảnh thật, chủ trọ tải ảnh lên ở trang chi tiết tin.
+- **Icon menu là icon nét SVG** (`Helpers/NavIcon.cs`), cùng phong cách với `_HomeIcon` của Tenant, thay cho emoji trên `_Layout`, menu chủ trọ và menu người thuê. Muốn đổi icon, sửa đường vẽ trong `NavIcon.cs`.
+
 ## 3. Chức năng ↔ báo cáo (Hình 3.5, UC, BM, R)
 
 | Nhóm | Controller (đường dẫn) | Báo cáo | Nội dung |

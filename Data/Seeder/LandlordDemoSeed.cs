@@ -119,7 +119,7 @@ public static class LandlordDemoSeed
             for (var i = 0; i < 3; i++)
                 post.RoomImages.Add(new RoomImage
                 {
-                    MediaUrl = $"https://picsum.photos/seed/ezrent-demo-{code}-{i + 1}/800/600", MediaType = MediaType.Image,
+                    MediaUrl = DemoRoomImages.For(type, int.Parse(code), i, title.Contains("gác")), MediaType = MediaType.Image,
                     IsPrimary = i == 0, DisplayOrder = i, CreatedAt = createdUtc
                 });
             post.Services.Add(new Service { Name = "Internet", UnitPrice = 100000, Unit = "tháng" });
@@ -340,7 +340,7 @@ public static class LandlordDemoSeed
         {
             RentalPostId = r201.RentalPostId, TenantId = t[2].Id, ProblemType = "Điều hòa chảy nước", Priority = RepairPriority.Urgent,
             Description = "Điều hòa nhỏ nước xuống giường từ tối qua, em đã tắt máy và lau khô sàn.",
-            ImageUrl = "https://picsum.photos/seed/ezrent-demo-repair-1/800/600", Status = RepairRequestStatus.Pending, CreatedAt = nowUtc.AddHours(-3)
+            ImageUrl = DemoRoomImages.RepairImage, Status = RepairRequestStatus.Pending, CreatedAt = nowUtc.AddHours(-3)
         });
         db.RepairRequests.Add(new RepairRequest
         {

@@ -24,7 +24,7 @@
 @if (group != null)
 {
     <nav class="ll-menu d-flex flex-wrap align-items-center gap-2 py-2 mb-3 border-bottom no-print" aria-label="@group.Label">
-        <span class="fw-semibold text-muted me-1">@group.Icon @group.Label</span>
+        <span class="fw-semibold text-muted me-1 d-inline-flex align-items-center">@EZ_Rent.Helpers.NavIcon.Svg(group.Icon)@group.Label</span>
         @if (group.Items.Count > 1)
         {
             <div class="nav nav-pills flex-nowrap overflow-auto gap-1">
@@ -33,7 +33,7 @@
                     var current = item == activeItem;
                     var count = CountOf(item.Badge);
                     <a class="nav-link text-nowrap @(current ? "active" : null)" aria-current="@(current ? "page" : null)"
-                       asp-area="@item.Area" asp-controller="@item.Controller" asp-action="@item.Action">@item.Label
+                       asp-area="@item.Area" asp-controller="@item.Controller" asp-action="@item.Action">@EZ_Rent.Helpers.NavIcon.Svg(item.Icon, 16)@item.Label
                         @if (count > 0) { <span class="badge bg-danger ms-1">@count</span> }</a>
                 }
             </div>
